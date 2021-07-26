@@ -1,116 +1,99 @@
 package com.example.demo.service
 
-import com.example.demo.Entity.PersonEntity
-import com.example.demo.Model.Hobbies
-import com.example.demo.Model.Hobby
-import com.example.demo.Model.Person
-import com.example.demo.Repository.PersonRepository
-import org.jetbrains.annotations.NotNull
+import com.example.demo.entity.Person
+import com.example.demo.model_xml.HobbiesXml
+import com.example.demo.model_xml.HobbyXml
+import com.example.demo.model_xml.PersonXml
+import com.example.demo.repository.PersonRepository
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
 
 @Service
 class PersonService(
-    private var personRepository: PersonRepository,
-    private var hobbyService: HobbyService
+    private val personRepository: PersonRepository,
+    private val hobbyService: HobbyService
 ) {
-    fun getPersons(): MutableList<PersonEntity> = personRepository.findAll()
+    fun getPersons(): MutableList<Person> = personRepository.findAll()
 
-
-    fun getPersonsXml(list: MutableList<PersonEntity>): MutableList<Person> {
-        val persons: MutableList<Person> = mutableListOf()
+    fun getPersonsXml(list: MutableList<Person>): MutableList<PersonXml> {
+        val personsXml: MutableList<PersonXml> = mutableListOf()
         list.forEach { element ->
-            persons.add(
-                Person(
-                    element.name,
-                    element.birthday,
-                    hobbyService.getHobbiesByPerson(element.id)?.let {
+            personsXml.add(
+                PersonXml(
+                    element.name!!,
+                    element.birthday!!,
+                    HobbiesXml(
                         hobbyService.convertToHobbiesXml(
-                            it
+                            hobbyService.getHobbiesByPerson(element.id!!)!!
                         )
-                    }?.let {
-                        Hobbies(
-                            it
-                        )
-                    }))
+                    )
+                )
+            )
         }
-        return persons
+        return personsXml
     }
 
-    fun addPersons(list: MutableList<Person>) {
-        val ignoreList: MutableList<PersonEntity> = mutableListOf()
-        personRepository.findAll().filter { it.name ==  }.forEach {
-                ignoreList.add(it)
-        }
-        list.forEach { person ->
-            if(!person.isExistList(ignoreList)) {
-                personRepository.insertPerson(person.name, person.birthday)
-                if (person.hobbies != null)
-                   person.hobbies!!.hobby.forEach { hobby ->
-                       getId(person.name, person.birthday).let {
-                           hobbyService.insertHobby(hobby.complexity, hobby.hobby_name,
-                               it
-                           )
-                       }
-                   }
+    fun addPerson(personXml: PersonXml) {
+        if(personRepository.findAll().any { it.name == personXml.name && it.birthday == personXml.birthday }) {
+            if(personXml.hobbies != null) {
+
+                val dbHobbiesXml = hobbyService.convertToHobbiesXml(
+                    hobbyService.getHobbiesByPerson(getId(personXml.name!!, personXml.birthday!!)!!)!!)
+
+                val ignoreHobbyXml: MutableList<HobbyXml> = mutableListOf()
+
+                personXml.hobbies!!.hobbyXml.forEach { hobby ->
+                    if(hobby.isExistList(hobbyService.getHobbiesByPerson(getId(personXml.name!!, personXml.birthday!!)!!)!!)) {
+                        ignoreHobbyXml.add(hobby)
+                    }
+                }
+
+                var flag = false
+                val deleteHobbyXml: MutableList<HobbyXml> = mutableListOf()
+
+                dbHobbiesXml.forEach { db_hobby ->
+                    personXml.hobbies?.hobbyXml?.forEach { xml_hobby ->
+                        if(xml_hobby.equals(db_hobby))
+                            flag = true
+                    }
+                    if(!flag)
+                        deleteHobbyXml.add(db_hobby)
+                    flag = false
+                }
+
+                personXml.hobbies!!.hobbyXml.forEach { hobby ->
+                    if(!hobby.isExistList(ignoreHobbyXml)) {
+                        hobbyService.insertHobby(
+                            hobby.complexity!!,
+                            hobby.hobby_name!!,
+                            getId(personXml.name!!, personXml.birthday!!)
+                            !!)
+                    }
+                }
+
+                deleteHobbyXml.forEach { hobby ->
+                    hobbyService.deleteHobby(hobby.complexity!!, hobby.hobby_name!!, getId(personXml.name, personXml.birthday)!!)
+                }
             } else {
-                if (person.hobbies != null) {
-                    val dbHobby: MutableList<Hobby> =
-                        hobbyService.getHobbiesByPerson(getId(person.name, person.birthday))?.let {
-                            hobbyService
-                                .convertToHobbiesXml(
-                                    it
-                                )
-                        }!!
-                    val ignoreHobby: MutableList<Hobby> = mutableListOf()
-                    val deleteHobby: MutableList<Hobby> = mutableListOf()
-                    person.hobbies!!.hobby.forEach { hobby ->
-                        if(hobby.isExistList(
-                                hobbyService.getHobbiesByPerson(
-                                    getId(person.name, person.birthday))!!
-                            ) == true) {
-                            ignoreHobby.add(hobby)
-                        }
-                    }
-                    var flag = false
-                    dbHobby.forEach { db_hobby ->
-                        person.hobbies?.hobby?.forEach { xml_hobby ->
-                            if(xml_hobby.equals(db_hobby))
-                                flag = true
-                        }
-                        if(!flag)
-                            deleteHobby.add(db_hobby)
-                        flag = false
-                    }
-                    person.hobbies!!.hobby.forEach { hobby ->
-                        if(!hobby.isExistList(ignoreHobby)) {
-                            getId(person.name, person.birthday).let {
-                                hobbyService.insertHobby(hobby.complexity, hobby.hobby_name,
-                                    it
-                                )
-                            }
-                        }
-                    }
-                    deleteHobby.forEach { hobby ->
-                        getId(person.name, person.birthday).let {
-                            hobbyService.deleteHobby(hobby.complexity, hobby.hobby_name,
-                                it
-                            )
-                        }
-                    }
+                hobbyService.deleteHobby(getId(personXml.name, personXml.birthday)!!)
+            }
+        } else {
+            personRepository.save(Person().apply {
+                personXml.name; personXml.birthday
+            })
+
+            if(personXml.hobbies != null) {
+                personXml.hobbies!!.hobbyXml.forEach { hobby ->
+                    hobbyService.insertHobby(
+                        hobby.complexity!!,
+                        hobby.hobby_name!!,
+                        getId(personXml.name!!, personXml.birthday!!)
+                        !!)
                 }
             }
         }
     }
 
-    @Transactional
-    @NotNull
-    fun getId(name: String, birthday: String): Long {
-        return personRepository.getId(name, birthday)
-    }
-
-    @Transactional
-    fun addPerson(person: Person) {
-        personRepository.insertPerson(person.name, person.birthday)
+    private fun getId(name: String?, birthday: String?): Long? {
+        return personRepository.findAllByNameLikeAndBirthdayLike(name!!, birthday!!)[0].id
     }
 }

@@ -1,34 +1,40 @@
 package com.example.demo.service
 
-import com.example.demo.Entity.HobbyEntity
-import com.example.demo.Model.Hobby
-import com.example.demo.Repository.HobbyRepository
+import com.example.demo.entity.Hobby
+import com.example.demo.model_xml.HobbyXml
+import com.example.demo.repository.HobbyRepository
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
 
 @Service
-class HobbyService(private val hobbyRepository: HobbyRepository) {
-    @Transactional
-    fun getHobbiesByPerson(id: Long): MutableList<HobbyEntity>? {
-        return id?.let { hobbyRepository.getHobbiesByPerson(it) }
+class HobbyService(
+    private val hobbyRepository: HobbyRepository
+) {
+    fun getHobbiesByPerson(id: Long): MutableList<Hobby>? {
+        return id.let { hobbyRepository.findAllByPerson(it) }
     }
 
-    fun convertToHobbiesXml(list: MutableList<HobbyEntity>) : MutableList<Hobby> {
-        val hobbies: MutableList<Hobby> = mutableListOf()
+    fun convertToHobbiesXml(list: MutableList<Hobby>) : MutableList<HobbyXml> {
+        val hobbiesXml: MutableList<HobbyXml> = mutableListOf()
         list.forEach { hobby ->
-            hobbies.add(Hobby(hobby.complexity, hobby.hobby_name))
+            hobbiesXml.add(HobbyXml(hobby.complexity!!, hobby.hobby_name!!))
         }
-        return hobbies
+        return hobbiesXml
     }
 
-    @Transactional
     fun insertHobby(complexity: Int, hobby_name: String, person_id: Long) {
-        hobbyRepository.insertHobby(complexity, hobby_name, person_id)
+        hobbyRepository.save(Hobby().apply {
+            complexity; hobby_name; person_id
+        })
     }
 
-    @Transactional
     fun deleteHobby(complexity: Int, hobby_name: String, person_id: Long) {
-        hobbyRepository.deleteHobby(complexity, hobby_name, person_id)
+        hobbyRepository.delete(Hobby().apply {
+            complexity; hobby_name; person_id
+        })
+    }
+
+    fun deleteHobby(person_id: Long) {
+        hobbyRepository.delete(Hobby().apply { person_id })
     }
 
 }
