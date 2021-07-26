@@ -1,186 +1,186 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <persons>
-    <person>
+    <personsXml>
         <name>Ivanov Ivan Ivanovich</name>
         <birthday>1994-11-11</birthday>
         <hobbies>
-            <hobby>
+            <hobbyXml>
                 <complexity>10</complexity>
                 <hobby_name>Bycicle</hobby_name>
-            </hobby>
+            </hobbyXml>
         </hobbies>
-    </person>
-    <person>
+    </personsXml>
+    <personsXml>
         <name>Dobrov Pert Petrovich</name>
         <birthday>1999-05-09</birthday>
         <hobbies>
-            <hobby>
+            <hobbyXml>
                 <complexity>20</complexity>
                 <hobby_name>Monocicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>100</complexity>
                 <hobby_name>Fourcicle</hobby_name>
-            </hobby>
+            </hobbyXml>
         </hobbies>
-    </person>
-    <person>
+    </personsXml>
+    <personsXml>
         <name>Alaeva Svetlana Olegovna</name>
         <birthday>2000-10-04</birthday>
         <hobbies>
-            <hobby>
+            <hobbyXml>
                 <complexity>30</complexity>
                 <hobby_name>Bycicle</hobby_name>
-            </hobby>
+            </hobbyXml>
         </hobbies>
-    </person>
-    <person>
+    </personsXml>
+    <personsXml>
         <name>Petrov Petr Petrovich</name>
         <birthday>1999-05-05</birthday>
         <hobbies/>
-    </person>
-    <person>
+    </personsXml>
+    <personsXml>
         <name>Sidorenko Alla Borisovna</name>
         <birthday>2001-03-05</birthday>
         <hobbies/>
-    </person>
-    <person>
+    </personsXml>
+    <personsXml>
         <name>Njdds Jdejnd Kjion</name>
         <birthday>1999-01-02</birthday>
         <hobbies>
-            <hobby>
+            <hobbyXml>
                 <complexity>12</complexity>
                 <hobby_name>Some_hobby</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>12</complexity>
                 <hobby_name>Some_hobby</hobby_name>
-            </hobby>
+            </hobbyXml>
         </hobbies>
-    </person>
-    <person>
+    </personsXml>
+    <personsXml>
         <name>Ivanov Viacheslav Igorevich</name>
         <birthday>1994-09-09</birthday>
         <hobbies/>
-    </person>
-    <person>
+    </personsXml>
+    <personsXml>
         <name>Fdafds Afcbfh Hhfgndfg</name>
         <birthday>1984-11-11</birthday>
         <hobbies>
-            <hobby>
+            <hobbyXml>
                 <complexity>20</complexity>
                 <hobby_name>Monocicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>100</complexity>
                 <hobby_name>Fourcicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>20</complexity>
                 <hobby_name>Monocicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>100</complexity>
                 <hobby_name>Fourcicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>20</complexity>
                 <hobby_name>Monocicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>100</complexity>
                 <hobby_name>Fourcicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>20</complexity>
                 <hobby_name>Monocicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>100</complexity>
                 <hobby_name>Fourcicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>20</complexity>
                 <hobby_name>Monocicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>100</complexity>
                 <hobby_name>Fourcicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>20</complexity>
                 <hobby_name>Monocicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>100</complexity>
                 <hobby_name>Fourcicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>20</complexity>
                 <hobby_name>Monocicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>100</complexity>
                 <hobby_name>Fourcicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>20</complexity>
                 <hobby_name>Monocicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>100</complexity>
                 <hobby_name>Fourcicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>20</complexity>
                 <hobby_name>Monocicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>100</complexity>
                 <hobby_name>Fourcicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>20</complexity>
                 <hobby_name>Monocicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>100</complexity>
                 <hobby_name>Fourcicle</hobby_name>
-            </hobby>
+            </hobbyXml>
         </hobbies>
-    </person>
-    <person>
+    </personsXml>
+    <personsXml>
         <name>Kkpobmhtg Bklbjierg Okjdvopv</name>
         <birthday>1974-12-12</birthday>
         <hobbies>
-            <hobby>
+            <hobbyXml>
                 <complexity>30</complexity>
                 <hobby_name>Tricicle</hobby_name>
-            </hobby>
-            <hobby>
+            </hobbyXml>
+            <hobbyXml>
                 <complexity>30</complexity>
                 <hobby_name>Tricicle</hobby_name>
-            </hobby>
+            </hobbyXml>
         </hobbies>
-    </person>
-    <person>
+    </personsXml>
+    <personsXml>
         <name>Person Person Person</name>
         <birthday>1999-11-11</birthday>
         <hobbies>
-            <hobby>
+            <hobbyXml>
                 <complexity>12</complexity>
                 <hobby_name>Some_hobby</hobby_name>
-            </hobby>
+            </hobbyXml>
         </hobbies>
-    </person>
-    <person>
+    </personsXml>
+    <personsXml>
         <name>P P P</name>
         <birthday>1992-09-09</birthday>
         <hobbies/>
-    </person>
-    <person>
+    </personsXml>
+    <personsXml>
         <name>Person1 Person1 Person1</name>
         <birthday>1999-11-11</birthday>
         <hobbies/>
-    </person>
+    </personsXml>
 </persons>

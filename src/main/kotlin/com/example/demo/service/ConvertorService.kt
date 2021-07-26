@@ -1,11 +1,13 @@
-package com.example.demo
+package com.example.demo.service
 
 import com.example.demo.model_xml.PersonsXml
+import org.springframework.stereotype.Service
 import java.io.File
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
 
-class Convertor {
+@Service("convectorService")
+class ConvertorService {
     fun marshalling(people: PersonsXml, outputFile: File) {
         JAXBContext.newInstance(PersonsXml::class.java)
             .createMarshaller().apply {
