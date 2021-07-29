@@ -1,24 +1,24 @@
 package com.example.demo.service
 
-import com.example.demo.model_xml.PersonsXml
+import com.example.demo.model_xml.Persons
 import org.springframework.stereotype.Service
 import java.io.File
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
 
-@Service("convectorService")
+@Service
 class ConvertorService {
-    fun marshalling(people: PersonsXml, outputFile: File) {
-        JAXBContext.newInstance(PersonsXml::class.java)
+    fun marshalling(people: Persons, outputFile: File) {
+        JAXBContext.newInstance(Persons::class.java)
             .createMarshaller().apply {
                 setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true)
                 marshal(people, outputFile)
             }
     }
 
-    fun unmarshalling(inputFile: File): Any {
-        val jaxbContext = JAXBContext.newInstance(PersonsXml::class.java)
+    fun unmarshalling(path: String): Persons {
+        val jaxbContext = JAXBContext.newInstance(Persons::class.java)
         val unmarshaller = jaxbContext.createUnmarshaller()
-        return unmarshaller.unmarshal(inputFile) as PersonsXml
+        return unmarshaller.unmarshal(File(path)) as Persons
     }
 }

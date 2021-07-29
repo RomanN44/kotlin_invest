@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlElement
 import javax.xml.bind.annotation.XmlRootElement
 
 @XmlRootElement(name = "persons")
-data class PersonsXml(
+data class Persons(
     @XmlElement
-    var personsXml: MutableList<PersonXml> = mutableListOf()
+    var person: MutableList<Person> = mutableListOf()
 )

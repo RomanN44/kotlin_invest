@@ -4,15 +4,15 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "hobby")
-data class Hobby(
+data class HobbyEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hobby_id")
-    val id: Long? = null,
+    var id: Long? = null,
     @Column(name = "complexity")
-    val complexity: Int? = null,
+    var complexity: Int? = null,
     @Column(name = "hobby_name")
-    val hobby_name: String? = null,
+    var hobby_name: String? = null,
     @Column(name = "person_id")
-    val person: Long? = null
+    var person: Long? = null
 )

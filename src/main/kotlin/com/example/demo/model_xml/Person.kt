@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement
 
 @XmlRootElement(name = "Person")
 @XmlAccessorType(XmlAccessType.FIELD)
-data class PersonXml(
+data class Person(
     @XmlElement
     var name: String? = null,
 
@@ -15,25 +15,25 @@ data class PersonXml(
     var birthday: String? = null,
 
     @XmlElement(name = "hobbies")
-    var hobbies: HobbiesXml? = HobbiesXml(mutableListOf())
+    var hobbies: Hobbies? = Hobbies(mutableListOf())
     ) {
 
-    fun equalsWithoutHobbies(personXml: PersonXml): Boolean {
-        if(name == personXml.name && birthday == personXml.birthday)
+    fun equalsWithoutHobbies(person: Person): Boolean {
+        if(name == person.name && birthday == person.birthday)
             return true
         return false
     }
 
-    fun isExistList(personXmlList: List<PersonXml>): Boolean {
-        personXmlList.forEach { person ->
+    fun isExistList(personList: List<Person>): Boolean {
+        personList.forEach { person ->
             if(name == person.name && birthday == person.birthday)
                 return true
         }
         return false
     }
 
-    fun returnClone(personXmlList: List<PersonXml>): PersonXml? {
-        personXmlList.forEach { person ->
+    fun returnClone(personList: List<Person>): Person? {
+        personList.forEach { person ->
             if(name == person.name && birthday == person.birthday)
                 return person
         }

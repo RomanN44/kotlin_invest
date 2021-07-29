@@ -1,33 +1,28 @@
 package com.example.demo.service
 
-import com.example.demo.model_xml.PersonsXml
-import org.springframework.context.annotation.Bean
+import com.example.demo.model_xml.Persons
+import org.springframework.messaging.Message
 import org.springframework.stereotype.Service
 
 import java.io.File
 
 @Service
 class MainService(
-    private val personService: PersonService
+    private val personService: PersonService,
+    private val convertorService: ConvertorService
 ) {
 
-    @Bean
-    fun start() {
-        fromDbToXmlNew()
-        fromXmlToDbNew()
-    }
-
-    private fun fromDbToXmlNew() {
+    fun fromDbToXml() {
         ConvertorService()
             .marshalling(
-                PersonsXml(personService.getPersonsXml(personService.getPersons())),
-                File("src/main/resources/PersonsNew.xml")
+                Persons(personService.getPersonsXml(personService.getPersons())),
+                File("src/main/resources/output/PersonsNew.xml")
             )
     }
 
-    private fun fromXmlToDbNew() {
-        val personsXml: PersonsXml = ConvertorService().unmarshalling(File("src/main/resources/Persons.xml")) as PersonsXml
-        personsXml.personsXml.forEach { person ->
+    fun fromXmlToDb(message: Message<String>) {
+        val persons: Persons = convertorService.unmarshalling(message.payload.replace('\\', '/'))
+        persons.person.forEach { person ->
             personService.addPerson(person)
         }
     }

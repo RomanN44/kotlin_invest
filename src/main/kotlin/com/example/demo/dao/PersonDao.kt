@@ -1,95 +1,95 @@
 package com.example.demo.dao
 
-import com.example.demo.model_xml.HobbiesXml
-import com.example.demo.model_xml.HobbyXml
-import com.example.demo.model_xml.PersonXml
+import com.example.demo.model_xml.Hobbies
+import com.example.demo.model_xml.Hobby
+import com.example.demo.model_xml.Person
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 
 @Repository
 class PersonDao(var jdbcTemplate: JdbcTemplate){
-    fun loadAllPersons(): MutableList<PersonXml> {
-        val list: MutableList<PersonXml> = mutableListOf()
+    fun loadAllPersons(): MutableList<Person> {
+        val list: MutableList<Person> = mutableListOf()
         list.addAll(selectPersonWithHobby())
         list.addAll(selectPersonsWithoutHobby())
         return list
     }
 
-    fun selectPersonsWithoutHobby(): MutableList<PersonXml> =
+    fun selectPersonsWithoutHobby(): MutableList<Person> =
         jdbcTemplate.query(
             "SELECT * FROM persons WHERE person_id NOT IN(SELECT person_id FROM hobby)"
     ) {
         rs: ResultSet, _: Int ->
-            PersonXml(rs.getString("name"), rs.getString("birthday"), null)
+            Person(rs.getString("name"), rs.getString("birthday"), null)
     }
 
-    fun selectPersonWithHobby(): MutableList<PersonXml> {
-        val list: MutableList<PersonXml> = jdbcTemplate.query(
+    fun selectPersonWithHobby(): MutableList<Person> {
+        val list: MutableList<Person> = jdbcTemplate.query(
             "SELECT * FROM persons RIGHT JOIN hobby ON persons.person_id = hobby.person_id"
         ) { rs: ResultSet, _: Int ->
-            val hobbies = HobbiesXml(mutableListOf())
-            hobbies.hobbyXml.add(HobbyXml(rs.getInt("complexity"), rs.getString("hobby_name")))
-            PersonXml(rs.getString("name"), rs.getString("birthday"), hobbies)
+            val hobbies = Hobbies(mutableListOf())
+            hobbies.hobby.add(Hobby(rs.getInt("complexity"), rs.getString("hobby_name")))
+            Person(rs.getString("name"), rs.getString("birthday"), hobbies)
         }
 
-        val result: MutableList<PersonXml> = mutableListOf()
+        val result: MutableList<Person> = mutableListOf()
 
-        var temp = PersonXml("temp", "temp", null)
+        var temp = Person("temp", "temp", null)
 
         list.forEach { person1 ->
             if(!temp.equalsWithoutHobbies(person1)){
                 temp = person1
-                val hobbyXmlList: MutableList<HobbyXml> = mutableListOf()
-                person1.hobbies?.hobbyXml?.first()?.let { hobbyXmlList.add(it) }
+                val hobbyList: MutableList<Hobby> = mutableListOf()
+                person1.hobbies?.hobby?.first()?.let { hobbyList.add(it) }
                 list.forEach { person2 ->
                     if(person1.equalsWithoutHobbies(person2) &&
-                            !(person1.hobbies?.hobbyXml?.first()?.equals(person2.hobbies?.hobbyXml?.first()))!!
+                            !(person1.hobbies?.hobby?.first()?.equals(person2.hobbies?.hobby?.first()))!!
                     ){
-                        person2.hobbies?.hobbyXml?.first()?.let { hobbyXmlList.add(it) }
+                        person2.hobbies?.hobby?.first()?.let { hobbyList.add(it) }
                     }
                 }
-                result.add(PersonXml(person1.name, person1.birthday, HobbiesXml(hobbyXmlList)))
+                result.add(Person(person1.name, person1.birthday, Hobbies(hobbyList)))
             }
         }
         return result
     }
 
-    private fun insertPersonGenerator(personXml: PersonXml): String {
-        return "INSERT INTO persons(name, birthday) VALUES ('" + personXml.name + "', '" + personXml.birthday + "')"
+    private fun insertPersonGenerator(person: Person): String {
+        return "INSERT INTO persons(name, birthday) VALUES ('" + person.name + "', '" + person.birthday + "')"
     }
 
-    private fun insertHobbyGenerator(hobbyXml: HobbyXml, personXml: PersonXml): String {
-        return "INSERT INTO hobby(complexity, hobby_name, person_id) VALUES (" + hobbyXml.complexity + ", '" + hobbyXml.hobby_name + "', " + getPersonId(personXml) + ")"
+    private fun insertHobbyGenerator(hobby: Hobby, person: Person): String {
+        return "INSERT INTO hobby(complexity, hobby_name, person_id) VALUES (" + hobby.complexity + ", '" + hobby.hobby_name + "', " + getPersonId(person) + ")"
     }
 
-    private fun deleteHobbyGeneratorByPerson(personXml: PersonXml): String {
-        return "DELETE FROM public.hobby WHERE person_id = " + getPersonId(personXml).toString()
+    private fun deleteHobbyGeneratorByPerson(person: Person): String {
+        return "DELETE FROM public.hobby WHERE person_id = " + getPersonId(person).toString()
     }
 
-    private fun deleteHobbyGeneratorByHobby(hobbyXml: HobbyXml, personXml: PersonXml): String {
-        return "DELETE FROM public.hobby WHERE person_id = " + getPersonId(personXml).toString() + " and complexity = " + hobbyXml.complexity + " and lower(hobby_name) like lower('" +hobbyXml.hobby_name + "')"
+    private fun deleteHobbyGeneratorByHobby(hobby: Hobby, person: Person): String {
+        return "DELETE FROM public.hobby WHERE person_id = " + getPersonId(person).toString() + " and complexity = " + hobby.complexity + " and lower(hobby_name) like lower('" +hobby.hobby_name + "')"
     }
 
-    private fun getPersonId(personXml: PersonXml): Long? {
+    private fun getPersonId(person: Person): Long? {
         val sql =
-            "Select person_id From persons where lower(persons.name) Like(lower('" + personXml.name + "')) and lower(birthday) Like(lower('" + personXml.birthday + "'))"
+            "Select person_id From persons where lower(persons.name) Like(lower('" + person.name + "')) and lower(birthday) Like(lower('" + person.birthday + "'))"
         return jdbcTemplate.queryForObject(sql, Long::class.java)
     }
 
-    private fun selectPersonHobbiesGenerator(personXml: PersonXml): String {
-        return "SELECT complexity, hobby_name, person_id FROM hobby where person_id = " + getPersonId(personXml).toString()
+    private fun selectPersonHobbiesGenerator(person: Person): String {
+        return "SELECT complexity, hobby_name, person_id FROM hobby where person_id = " + getPersonId(person).toString()
     }
 
-    private fun selectHobbyByPerson(personXml: PersonXml): MutableList<HobbyXml> =
-        jdbcTemplate.query(selectPersonHobbiesGenerator(personXml)
+    private fun selectHobbyByPerson(person: Person): MutableList<Hobby> =
+        jdbcTemplate.query(selectPersonHobbiesGenerator(person)
         ) { rs: ResultSet, _: Int ->
-            HobbyXml(rs.getInt("complexity"), rs.getString("hobby_name"))
+            Hobby(rs.getInt("complexity"), rs.getString("hobby_name"))
         }
 
-    fun addPersonsWithoutHobby(personXmlList: MutableList<PersonXml>) {
-        val all: MutableList<PersonXml> = loadAllPersons()
-        personXmlList.forEach {
+    fun addPersonsWithoutHobby(personList: MutableList<Person>) {
+        val all: MutableList<Person> = loadAllPersons()
+        personList.forEach {
             if(!it.isExistList(all)) {
                 jdbcTemplate.execute(insertPersonGenerator(it))
             } else {
@@ -100,21 +100,21 @@ class PersonDao(var jdbcTemplate: JdbcTemplate){
         }
     }
 
-    fun addPersonsWithHobby(personXmlList: MutableList<PersonXml>) {
-        val all: MutableList<PersonXml> = loadAllPersons()
-        personXmlList.forEach { person ->
+    fun addPersonsWithHobby(personList: MutableList<Person>) {
+        val all: MutableList<Person> = loadAllPersons()
+        personList.forEach { person ->
             if(!person.isExistList(all)) {
                 jdbcTemplate.execute(insertPersonGenerator(person))
-                person.hobbies?.hobbyXml?.forEach {
+                person.hobbies?.hobby?.forEach {
                     jdbcTemplate.execute(insertHobbyGenerator(it, person))
                 }
             } else {
-                val db_hobbiesXml:MutableList<HobbyXml> = selectHobbyByPerson(person)
-                val deleteList:MutableList<HobbyXml> = mutableListOf()
-                val ignorList:MutableList<HobbyXml> = mutableListOf()
+                val db_hobbies:MutableList<Hobby> = selectHobbyByPerson(person)
+                val deleteList:MutableList<Hobby> = mutableListOf()
+                val ignorList:MutableList<Hobby> = mutableListOf()
                 var flag = false
-                db_hobbiesXml.forEach { db_hobby ->
-                    person.hobbies?.hobbyXml?.forEach { xml_hobby ->
+                db_hobbies.forEach { db_hobby ->
+                    person.hobbies?.hobby?.forEach { xml_hobby ->
                         if(xml_hobby.equals(db_hobby))
                             flag = true
                     }
@@ -122,8 +122,8 @@ class PersonDao(var jdbcTemplate: JdbcTemplate){
                         deleteList.add(db_hobby)
                     flag = false
                 }
-                db_hobbiesXml.forEach { db_hobby ->
-                    person.hobbies?.hobbyXml?.forEach { xml_hobby ->
+                db_hobbies.forEach { db_hobby ->
+                    person.hobbies?.hobby?.forEach { xml_hobby ->
                         if(xml_hobby.equals(db_hobby))
                             ignorList.add(xml_hobby)
                     }
@@ -131,7 +131,7 @@ class PersonDao(var jdbcTemplate: JdbcTemplate){
                 deleteList.forEach { hobby ->
                     jdbcTemplate.execute(deleteHobbyGeneratorByHobby(hobby, person))
                 }
-                person.hobbies?.hobbyXml?.forEach {
+                person.hobbies?.hobby?.forEach {
                     if(!it.isExistList(ignorList))
                         jdbcTemplate.execute(insertHobbyGenerator(it, person))
                 }
@@ -139,10 +139,10 @@ class PersonDao(var jdbcTemplate: JdbcTemplate){
         }
     }
 
-    fun addPersons(personXmlList: MutableList<PersonXml>) {
-        val personsWithoutHobby: MutableList<PersonXml> = mutableListOf()
-        val personsWithHobby: MutableList<PersonXml> = mutableListOf()
-        personXmlList.forEach {
+    fun addPersons(personList: MutableList<Person>) {
+        val personsWithoutHobby: MutableList<Person> = mutableListOf()
+        val personsWithHobby: MutableList<Person> = mutableListOf()
+        personList.forEach {
             if(it.hobbies == null)
                 personsWithoutHobby.add(it)
             else

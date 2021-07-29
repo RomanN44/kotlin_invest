@@ -1,7 +1,7 @@
 package com.example.demo.service
 
-import com.example.demo.entity.Hobby
-import com.example.demo.model_xml.HobbyXml
+import com.example.demo.entity.HobbyEntity
+import com.example.demo.model_xml.Hobby
 import com.example.demo.repository.HobbyRepository
 import org.springframework.stereotype.Service
 
@@ -9,32 +9,36 @@ import org.springframework.stereotype.Service
 class HobbyService(
     private val hobbyRepository: HobbyRepository
 ) {
-    fun getHobbiesByPerson(id: Long): MutableList<Hobby>? {
+    fun getHobbiesByPerson(id: Long): MutableList<HobbyEntity>? {
         return id.let { hobbyRepository.findAllByPerson(it) }
     }
 
-    fun convertToHobbiesXml(list: MutableList<Hobby>) : MutableList<HobbyXml> {
-        val hobbiesXml: MutableList<HobbyXml> = mutableListOf()
+    fun convertToHobbiesXml(list: MutableList<HobbyEntity>) : MutableList<Hobby> {
+        val hobbies: MutableList<Hobby> = mutableListOf()
         list.forEach { hobby ->
-            hobbiesXml.add(HobbyXml(hobby.complexity!!, hobby.hobby_name!!))
+            hobbies.add(Hobby(hobby.complexity!!, hobby.hobby_name!!))
         }
-        return hobbiesXml
+        return hobbies
     }
 
-    fun insertHobby(complexity: Int, hobby_name: String, person_id: Long) {
-        hobbyRepository.save(Hobby().apply {
-            complexity; hobby_name; person_id
+    fun insertHobby(hobby: HobbyEntity) {
+        hobbyRepository.save(HobbyEntity().apply {
+            complexity = hobby.complexity
+            hobby_name = hobby.hobby_name
+            person = hobby.person
         })
     }
 
-    fun deleteHobby(complexity: Int, hobby_name: String, person_id: Long) {
-        hobbyRepository.delete(Hobby().apply {
-            complexity; hobby_name; person_id
+    fun deleteHobby(hobby: HobbyEntity) {
+        hobbyRepository.delete(HobbyEntity().apply {
+            complexity = hobby.complexity
+            hobby_name = hobby.hobby_name
+            person = hobby.person
         })
     }
 
     fun deleteHobby(person_id: Long) {
-        hobbyRepository.delete(Hobby().apply { person_id })
+        hobbyRepository.delete(HobbyEntity().apply { person = person_id })
     }
 
 }
