@@ -22,23 +22,20 @@ class HobbyService(
     }
 
     fun insertHobby(hobby: HobbyEntity) {
-        hobbyRepository.save(HobbyEntity().apply {
-            complexity = hobby.complexity
-            hobby_name = hobby.hobby_name
-            person = hobby.person
-        })
+        hobbyRepository.save(createHobbyEntity(hobby))
     }
 
     fun deleteHobby(hobby: HobbyEntity) {
-        hobbyRepository.delete(HobbyEntity().apply {
-            complexity = hobby.complexity
-            hobby_name = hobby.hobby_name
-            person = hobby.person
-        })
+        hobbyRepository.delete(createHobbyEntity(hobby))
     }
 
     fun deleteHobby(person_id: Long) {
         hobbyRepository.delete(HobbyEntity().apply { person = person_id })
     }
 
+    private fun createHobbyEntity(hobby: HobbyEntity) = HobbyEntity().apply {
+        complexity = hobby.complexity
+        hobby_name = hobby.hobby_name
+        person = hobby.person
+    }
 }
