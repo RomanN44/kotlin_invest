@@ -3,6 +3,7 @@ package com.example.demo.config
 import com.example.demo.service.ConvectorService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.integration.channel.DirectChannel
 import org.springframework.integration.config.EnableIntegration
 import org.springframework.integration.dsl.*
 import org.springframework.integration.file.FileWritingMessageHandler
@@ -20,10 +21,10 @@ class IntegrationConfig(
     private val error = File("src/main/resources/error")
 
     @Bean
-    fun xml() = MessageChannels.direct().get()
+    fun xml(): DirectChannel = MessageChannels.direct().get()
 
     @Bean
-    fun errors() = MessageChannels.direct().get()
+    fun errors(): DirectChannel = MessageChannels.direct().get()
 
     @Bean
     fun filesFlow() = integrationFlow(

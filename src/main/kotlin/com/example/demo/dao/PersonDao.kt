@@ -55,13 +55,12 @@ class PersonDao(var jdbcTemplate: JdbcTemplate){
         return result
     }
 
-    private fun insertPersonGenerator(person: Person): String {
-        return "INSERT INTO persons(name, birthday) VALUES ('" + person.name + "', '" + person.birthday + "')"
-    }
+    private fun insertPersonGenerator(person: Person): String =
+        "INSERT INTO persons(name, birthday) VALUES ('${person.name}', '${person.birthday}')"
 
-    private fun insertHobbyGenerator(hobby: Hobby, person: Person): String {
-        return "INSERT INTO hobby(complexity, hobby_name, person_id) VALUES (" + hobby.complexity + ", '" + hobby.hobby_name + "', " + getPersonId(person) + ")"
-    }
+
+    private fun insertHobbyGenerator(hobby: Hobby, person: Person): String =
+        "INSERT INTO hobby(complexity, hobby_name, person_id) VALUES (${hobby.complexity}, '${hobby.hobby_name}', ${getPersonId(person)})"
 
     private fun deleteHobbyGeneratorByPerson(person: Person): String {
         return "DELETE FROM public.hobby WHERE person_id = " + getPersonId(person).toString()
